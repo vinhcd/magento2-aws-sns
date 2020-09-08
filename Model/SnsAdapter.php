@@ -28,10 +28,10 @@ class SnsAdapter
 
         $this->client = new SnsClient([
             'version'     => 'latest',
-            'region'      => 'ap-southeast-1',
+            'region'      => $scopeConfig->getValue('vinhcd_aws/general/region'),
             'credentials' => [
-                'key'    => $scopeConfig->getValue('vinhcd_aws/api_key/access_key'),
-                'secret' => $scopeConfig->getValue('vinhcd_aws/api_key/secret'),
+                'key'    => $scopeConfig->getValue('vinhcd_aws/general/access_key'),
+                'secret' => $scopeConfig->getValue('vinhcd_aws/general/secret'),
             ],
         ]);
     }

@@ -5,26 +5,15 @@
         <section id="vinhcd_aws">
             <group id="sns" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>SNS</label>
-                <field id="type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Type</label>
-                    <source_model>Vinhcd\AwsSns\Model\Config\Source\NotificationType</source_model>
+                <field id="event" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Event</label>
+                    <source_model>Vinhcd\AwsSns\Model\Config\Source\Event</source_model>
                 </field>
-                <field id="order_success_arn" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="order_place_arn" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Topic ARN</label>
+                    <comment>It will push to this topic after placing Order</comment>
                     <depends>
-                        <field id="type">order_success</field>
-                    </depends>
-                </field>
-                <field id="order_failure_arn" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Topic ARN</label>
-                    <depends>
-                        <field id="type">order_failure</field>
-                    </depends>
-                </field>
-                <field id="order_cancel_arn" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Topic ARN</label>
-                    <depends>
-                        <field id="type">order_cancel</field>
+                        <field id="event">order_place</field>
                     </depends>
                 </field>
             </group>
