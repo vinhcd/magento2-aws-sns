@@ -36,8 +36,16 @@ class SnsAdapter
         ]);
     }
 
-    public function sendToTopic($topic='', $payload='')
+    /**
+     * @return \Aws\Result
+     */
+    public function getTopics()
     {
         return $this->client->listTopics();
+    }
+
+    public function sendToTopic($topic='', $payload='')
+    {
+        //todo: implement method
     }
 }
