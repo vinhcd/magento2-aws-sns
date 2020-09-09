@@ -2,6 +2,7 @@
 
 namespace Vinhcd\AwsSns\Model;
 
+use Aws\Exception\AwsException;
 use Aws\Sns\SnsClient;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 
@@ -38,14 +39,24 @@ class SnsAdapter
 
     /**
      * @return \Aws\Result
+     * @throws AwsException
      */
     public function getTopics()
     {
         return $this->client->listTopics();
     }
 
-    public function sendToTopic($topic='', $payload='')
+    /**
+     * @param string $topic
+     * @param string $payload
+     * @return void
+     * @throws AwsException
+     */
+    public function sendToTopic($topic, $payload)
     {
-        //todo: implement method
+        $this->client->publish([
+            'Message' => $payload,
+            'TopicArn' => $topic,
+        ]);
     }
 }
