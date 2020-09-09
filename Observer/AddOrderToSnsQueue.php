@@ -2,23 +2,19 @@
 
 namespace Vinhcd\AwsSns\Observer;
 
-use Magento\Catalog\Model\Product\Type;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\MessageQueue\PublisherInterface;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Item;
 use Psr\Log\LoggerInterface;
+use Vinhcd\AwsSns\Model\SnsQueueFactory;
 
 class AddOrderToSnsQueue implements ObserverInterface
 {
-    const TOPIC = 'vinhcd.order.place';
-
     /**
-     * @var PublisherInterface
+     * @var SnsQueueFactory
      */
-    protected $publisher;
+    protected $snsQueueFactory;
 
     /**
      * @var SerializerInterface
@@ -26,22 +22,30 @@ class AddOrderToSnsQueue implements ObserverInterface
     protected $serializer;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
 
     /**
-     * @param PublisherInterface $publisher
+     * @param SnsQueueFactory $snsQueueFactory
      * @param SerializerInterface $serializer
+     * @param ScopeConfigInterface $scopeConfig
      * @param LoggerInterface $logger
      */
     public function __construct(
-        PublisherInterface $publisher,
+        SnsQueueFactory $snsQueueFactory,
         SerializerInterface $serializer,
+        ScopeConfigInterface $scopeConfig,
         LoggerInterface $logger
     ) {
-        $this->publisher = $publisher;
+        $this->snsQueueFactory = $snsQueueFactory;
         $this->serializer = $serializer;
+        $this->scopeConfig = $scopeConfig;
         $this->logger = $logger;
     }
 
@@ -51,14 +55,14 @@ class AddOrderToSnsQueue implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var $order Order */
+        /** @var \Magento\Sales\Model\Order $order */
         $order = $observer->getData('order');
         $data = $order->getData();
 
         $data['items'] = [];
-        /* @var Item $item */
+        /* @var \Magento\Sales\Model\Order\Item $item */
         foreach ($order->getAllVisibleItems() as $item) {
-            if (!($item->getProductType() == Type::TYPE_SIMPLE && $item->getParentItem())) {
+            if (!($item->getProductType() == \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE && $item->getParentItem())) {
                 $data['items'][] = $item->getData();
             }
         }
@@ -66,8 +70,15 @@ class AddOrderToSnsQueue implements ObserverInterface
         foreach ($order->getAddresses() as $address) {
             $data['addresses'][] = $address->getData();
         }
+        $data['payment'] = $order->getPayment()->getMethod();
+
+        /* @var \Vinhcd\AwsSns\Model\SnsQueue $snsQueue */
+        $snsQueue = $this->snsQueueFactory->create();
         try {
-            $this->publisher->publish(self::TOPIC, $this->serializer->serialize($data));
+            $snsQueue->setData('topic_arn', $this->scopeConfig->getValue('vinhcd_aws/sns/order_place_arn'));
+            $snsQueue->setData('message', $this->serializer->serialize($data));
+            $snsQueue->setData('created_at', time());
+            $snsQueue->save();
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage());
         }
