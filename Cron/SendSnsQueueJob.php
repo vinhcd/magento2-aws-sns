@@ -14,7 +14,7 @@ class SendSnsQueueJob
      * todo: move to configurable option
      * @var int
      */
-    const MAX_SEND = 50;
+    const MAX_SEND = 10;
 
     /**
      * @var SnsAdapter
@@ -61,6 +61,7 @@ class SendSnsQueueJob
                 $this->snsAdapter->sendToTopic($queue->getTopicArn(), $queue->getMessage());
                 $queue->delete();
             } catch (\Exception $e) {
+                $this->logger->critical('SNS Queue error:');
                 $this->logger->critical($e->getMessage());
             }
             if ($i >= self::MAX_SEND) break;

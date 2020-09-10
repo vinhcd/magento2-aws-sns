@@ -1,5 +1,5 @@
 # magento2-aws-sns
-SNS observing service for magento2
+AWS SNS pushing service for magento2
 
 # Copyright
 This project is copyright by VinhCD Co,Ltd.

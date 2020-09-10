@@ -2,6 +2,6 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="sales_order_place_after">
-        <observer name="sales_order_add_to_sns_queue" instance="Vinhcd\AwsSns\Observer\AddOrderToSnsQueue"/>
+        <observer name="sales_order_place_add_to_sns_queue" instance="Vinhcd\AwsSns\Observer\AddOrderPlaceToSnsQueue"/>
     </event>
 </config>

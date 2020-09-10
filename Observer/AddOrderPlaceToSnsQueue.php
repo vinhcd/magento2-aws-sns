@@ -9,7 +9,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
 use Vinhcd\AwsSns\Model\SnsQueueFactory;
 
-class AddOrderToSnsQueue implements ObserverInterface
+class AddOrderPlaceToSnsQueue implements ObserverInterface
 {
     /**
      * @var SnsQueueFactory
@@ -75,9 +75,8 @@ class AddOrderToSnsQueue implements ObserverInterface
         /* @var \Vinhcd\AwsSns\Model\SnsQueue $snsQueue */
         $snsQueue = $this->snsQueueFactory->create();
         try {
-            $snsQueue->setData('topic_arn', $this->scopeConfig->getValue('vinhcd_aws/sns/order_place_arn'));
-            $snsQueue->setData('message', $this->serializer->serialize($data));
-            $snsQueue->setData('created_at', time());
+            $snsQueue->setTopicArn($this->scopeConfig->getValue('vinhcd_aws/sns/order_place_arn'));
+            $snsQueue->setMessage($this->serializer->serialize($data));
             $snsQueue->save();
         } catch (\Exception $e) {
             $this->logger->critical($e->getMessage());
