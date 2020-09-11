@@ -8,8 +8,7 @@
     "AFL-3.0"
   ],
   "require": {
-    "php": "^7.1.3",
-    "aws/aws-sdk-php": "^3.153.0",
+    "aws/aws-sdk-php": "*",
     "vinhcd/core": "~1.0"
   },
   "autoload": {

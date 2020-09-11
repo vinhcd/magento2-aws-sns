@@ -2,11 +2,11 @@
 
 namespace Vinhcd\AwsSns\Observer;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use Vinhcd\AwsSns\Model\Config\Config;
 use Vinhcd\AwsSns\Model\SnsQueueFactory;
 
 class AddOrderPlaceToSnsQueue implements ObserverInterface
@@ -22,9 +22,9 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
     protected $serializer;
 
     /**
-     * @var ScopeConfigInterface
+     * @var Config
      */
-    protected $scopeConfig;
+    protected $config;
 
     /**
      * @var LoggerInterface
@@ -34,18 +34,18 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
     /**
      * @param SnsQueueFactory $snsQueueFactory
      * @param SerializerInterface $serializer
-     * @param ScopeConfigInterface $scopeConfig
+     * @param Config $config
      * @param LoggerInterface $logger
      */
     public function __construct(
         SnsQueueFactory $snsQueueFactory,
         SerializerInterface $serializer,
-        ScopeConfigInterface $scopeConfig,
+        Config $config,
         LoggerInterface $logger
     ) {
         $this->snsQueueFactory = $snsQueueFactory;
         $this->serializer = $serializer;
-        $this->scopeConfig = $scopeConfig;
+        $this->config = $config;
         $this->logger = $logger;
     }
 
@@ -75,7 +75,7 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
         /* @var \Vinhcd\AwsSns\Model\SnsQueue $snsQueue */
         $snsQueue = $this->snsQueueFactory->create();
         try {
-            $snsQueue->setTopicArn($this->scopeConfig->getValue('vinhcd_aws/sns/order_place_arn'));
+            $snsQueue->setTopicArn($this->config->getOrderPlaceTopicArn());
             $snsQueue->setMessage($this->serializer->serialize($data));
             $snsQueue->save();
         } catch (\Exception $e) {

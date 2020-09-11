@@ -4,7 +4,7 @@ namespace Vinhcd\AwsSns\Model;
 
 use Aws\Exception\AwsException;
 use Aws\Sns\SnsClient;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Vinhcd\AwsSns\Model\Config\Config;
 
 class SnsAdapter
 {
@@ -14,25 +14,24 @@ class SnsAdapter
     protected $client;
 
     /**
-     * @var ScopeConfigInterface
+     * @var Config
      */
-    protected $scopeConfig;
+    protected $config;
 
     /**
      * SnsAdapter constructor.
-     * @param SnsClient $client
-     * @param ScopeConfigInterface $scopeConfig
+     * @param Config $config
      */
-    public function __construct(ScopeConfigInterface $scopeConfig)
+    public function __construct(Config $config)
     {
-        $this->scopeConfig = $scopeConfig;
+        $this->config = $config;
 
         $this->client = new SnsClient([
             'version'     => 'latest',
-            'region'      => $scopeConfig->getValue('vinhcd_aws/general/region'),
+            'region'      => $config->getDefaultRegion(),
             'credentials' => [
-                'key'    => $scopeConfig->getValue('vinhcd_aws/general/access_key'),
-                'secret' => $scopeConfig->getValue('vinhcd_aws/general/secret'),
+                'key'    => $config->getAccessKey(),
+                'secret' => $config->getSecret()
             ],
         ]);
     }
