@@ -9,7 +9,7 @@
   ],
   "require": {
     "php": "^7.1.3",
-    "aws/aws-sdk-php": "~3.153",
+    "aws/aws-sdk-php": "^3.153.0",
     "vinhcd/core": "~1.0"
   },
   "autoload": {
