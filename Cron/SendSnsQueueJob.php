@@ -79,7 +79,9 @@ class SendSnsQueueJob
                 $this->logger->critical('SNS Queue error:');
                 $this->logger->critical($e->getMessage());
             }
-            if ($i >= $this->config->getMaxMessagePerQueue()) break;
+            if ($i >= $this->config->getMaxMessagePerQueue()) {
+                break;
+            }
         }
     }
 
@@ -93,7 +95,8 @@ class SendSnsQueueJob
 
         $deadQueueDays = '-' . $this->config->getDeadQueueDays() . ' days';
         try {
-            $collection->addFieldToFilter('created_at',
+            $collection->addFieldToFilter(
+                'created_at',
                 ['lt' => $this->dateTime->date('Y-m-d H:i:s', strtotime($deadQueueDays))]
             )->walk('delete');
         } catch (\Exception $e) {

@@ -2,6 +2,7 @@
 
 namespace Vinhcd\AwsSns\Observer;
 
+use Magento\Catalog\Model\Product\Type;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Serialize\SerializerInterface;
@@ -62,7 +63,7 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
         $data['items'] = [];
         /* @var \Magento\Sales\Model\Order\Item $item */
         foreach ($order->getAllVisibleItems() as $item) {
-            if (!($item->getProductType() == \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE && $item->getParentItem())) {
+            if (!($item->getProductType() == Type::TYPE_SIMPLE && $item->getParentItem())) {
                 $data['items'][] = $item->getData();
             }
         }
