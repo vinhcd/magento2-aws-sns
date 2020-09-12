@@ -5,23 +5,28 @@
         <section id="vinhcd_aws">
             <group id="sns" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>SNS</label>
-                <field id="event" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/disable this feature</comment>
+                </field>
+                <field id="event" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Event</label>
                     <source_model>Vinhcd\AwsSns\Model\Config\Source\Event</source_model>
                 </field>
-                <field id="order_place_arn" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="order_place_arn" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Topic ARN</label>
-                    <comment>It will push to this topic after placing Order</comment>
+                    <comment>It will push to this topic after placing Order. Leave it empty if you want to ignore this event.</comment>
                     <depends>
                         <field id="event">order_place</field>
                     </depends>
                 </field>
-                <field id="max_message_per_queue" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="max_message_per_queue" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Max message per queue</label>
                     <validate>validate-digits</validate>
                     <comment>This indicates max number of message will be sent per queue</comment>
                 </field>
-                <field id="dead_queue_days" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="dead_queue_days" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Dead queue after (days)</label>
                     <validate>validate-digits</validate>
                     <comment>Message will not be sent after x days</comment>

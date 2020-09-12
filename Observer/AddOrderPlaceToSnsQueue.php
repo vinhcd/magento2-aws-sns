@@ -61,6 +61,12 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
+        $topicArn = $this->config->getOrderPlaceTopicArn();
+
+        if (!$this->config->isEnabled() || empty($topicArn)) {
+            return;
+        }
+
         /** @var \Magento\Sales\Model\Order $order */
         $order = $observer->getData('order');
         $data = $order->getData();
@@ -81,7 +87,7 @@ class AddOrderPlaceToSnsQueue implements ObserverInterface
         /* @var \Vinhcd\AwsSns\Model\SnsQueue $snsQueue */
         $snsQueue = $this->snsQueueFactory->create();
         try {
-            $snsQueue->setTopicArn($this->config->getOrderPlaceTopicArn());
+            $snsQueue->setTopicArn($topicArn);
             $snsQueue->setMessage($this->serializer->serialize($data));
             $snsQueue->save();
         } catch (\Exception $e) {

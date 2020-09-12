@@ -56,6 +56,14 @@ class Config extends DataObject
     /**
      * @return mixed
      */
+    public function isEnabled()
+    {
+        return $this->scopeConfig->getValue('vinhcd_aws/sns/active') == 1;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOrderPlaceTopicArn()
     {
         return $this->scopeConfig->getValue('vinhcd_aws/sns/order_place_arn');

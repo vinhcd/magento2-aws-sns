@@ -69,6 +69,10 @@ class SendSnsQueueJob
      */
     public function execute()
     {
+        if (!$this->config->isEnabled()) {
+            return;
+        }
+
         $this->removeDeadQueues();
 
         /* @var Collection $collection */
