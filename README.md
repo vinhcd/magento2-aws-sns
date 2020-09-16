@@ -2,7 +2,7 @@
 AWS SNS pushing service for magento2
 
 # Copyright
-This project is copyright by VinhCD Co,Ltd.
+This project is copyright by VinhCD Co,Ltd. (owned by hungnt)
 
 # Contact
 vinhcd.co.ltd@gmail.com
